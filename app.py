@@ -12,6 +12,8 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 st.set_page_config(page_title="Excel Chat Assistant", layout="wide")
 st.title("📊 Excel Insight Chatbot")
 
+st.write("🔐 API key exists:", bool(api_key))
+
 uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
 
 if uploaded_file:

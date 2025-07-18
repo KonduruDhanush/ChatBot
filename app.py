@@ -41,7 +41,7 @@ Just give the final answer in one sentence.
 
         headers = {
             "Authorization": f"Bearer {api_key}",
-            "HTTP-Referer": "https://streamlit.io",
+            "HTTP-Referer": "https://chatbot-7ok8igz2ldmbtgskkgyxr2.streamlit.app/",
             "Content-Type": "application/json"
         }
 

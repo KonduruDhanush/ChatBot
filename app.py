@@ -12,7 +12,7 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 st.set_page_config(page_title="Excel Chat Assistant", layout="wide")
 st.title("📊 Excel Insight Chatbot")
 
-st.write("🔐 API key exists:", bool(api_key))
+#st.write("🔐 API key exists:", bool(api_key))
 
 uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
 
@@ -51,20 +51,18 @@ Just give the final answer in one sentence.
         }
 
         res = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=body)
-        
-        try:
-            data = res.json()
-        except Exception:
-            st.error("❌ OpenRouter returned a non-JSON response")
-            st.code(res.text)
-            return "❌ Error"
-        
+
+        data = res.json()
+
+
+
         if "choices" in data:
+
             return data["choices"][0]["message"]["content"]
+
         else:
-            st.error("❌ OpenRouter API Error")
-            st.code(data)
-            return "❌ LLM failed to respond. Please try again."
+
+            return "LLM failed to respond. Please try again."
 
 
     def generate_chart(df, info):

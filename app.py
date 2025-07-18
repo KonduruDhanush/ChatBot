@@ -49,12 +49,21 @@ Just give the final answer in one sentence.
         }
 
         res = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=body)
-        data = res.json()
-
+        
+        try:
+            data = res.json()
+        except Exception:
+            st.error("❌ OpenRouter returned a non-JSON response")
+            st.code(res.text)
+            return "❌ Error"
+        
         if "choices" in data:
             return data["choices"][0]["message"]["content"]
         else:
+            st.error("❌ OpenRouter API Error")
+            st.code(data)
             return "❌ LLM failed to respond. Please try again."
+
 
     def generate_chart(df, info):
         try:

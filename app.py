@@ -77,7 +77,8 @@ Just give the final answer in one sentence.
             elif chart_type == "line":
                 return px.line(df, x=x, y=y, color=group_by)
             elif chart_type == "pie":
-                return px.pie(df, names=x, values=y)
+                value_counts = df[x].value_counts()
+                return px.pie(values=value_counts.values, names=value_counts.index)
             elif chart_type == "histogram":
                 return px.histogram(df, x=x)
         except Exception as e:

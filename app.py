@@ -105,7 +105,7 @@ Just give the final answer in one sentence.
             elif "histogram" in q or "distribution" in q:
                 return "histogram"
             else:
-                return "bar"
+                return "bar"
 
         if any(word in query.lower() for word in ["chart", "trend", "plot", "compare", "distribution", "graph", "pie", "bar", "line", "histogram"]):
             st.markdown("### 📈 Suggested Chart")

@@ -65,7 +65,7 @@ Just give the final answer in one sentence.
             return "LLM failed to respond. Please try again."
 
 
-            def infer_chart_type(query):
+        def infer_chart_type(query):
             q = query.lower()
             if "pie" in q:
                 return "pie"

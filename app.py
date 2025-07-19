@@ -77,8 +77,7 @@ Just give the final answer in one sentence.
             elif chart_type == "line":
                 return px.line(df, x=x, y=y, color=group_by)
             elif chart_type == "pie":
-                value_counts = df[x].value_counts()
-                return px.pie(values=value_counts.values, names=value_counts.index)
+                return px.pie(df, names=x, values=y)
             elif chart_type == "histogram":
                 return px.histogram(df, x=x)
         except Exception as e:
@@ -113,22 +112,19 @@ Just give the final answer in one sentence.
 
             chart_type = infer_chart_type(query)
             numeric_cols = df.select_dtypes(include='number').columns
-            categorical_cols = df.select_dtypes(include='object').columns
 
-            if chart_type == "pie":
-                chart_info = {
-                    "type": "pie",
-                    "x": categorical_cols[0] if len(categorical_cols) > 0 else df.columns[0],
-                    "y": None,
-                    "group_by": None
-                }
-            else:
-                chart_info = {
-                    "type": chart_type,
-                    "x": numeric_cols[0] if chart_type == "histogram" else df.columns[0],
-                    "y": numeric_cols[0] if chart_type in ["bar", "line"] else None,
-                    "group_by": None
-                }
+            chart_info = {
+                "type": chart_type,
+                "x": (
+                    numeric_cols[0] if chart_type == "histogram"
+                    else df.columns[0]
+                ),
+                "y": (
+                    numeric_cols[0] if chart_type in ["bar", "line"]
+                    else None
+                ),
+                "group_by": None
+            }
 
             fig = generate_chart(df, chart_info)
             if fig:

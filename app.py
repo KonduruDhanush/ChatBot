@@ -13,14 +13,17 @@ st.set_page_config(page_title="Excel Chat Assistant", layout="wide")
 st.title("📊 Excel Insight Chatbot")
 
 # Show if API key is detected
-st.write("🔐 API key present:", bool(api_key))
-st.write("🔐 Key length:", len(api_key) if api_key else "None")
+#st.write("🔐 API key present:", bool(api_key))
+#st.write("🔐 Key length:", len(api_key) if api_key else "None")
 
 # Upload Excel file
 uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
 
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
+    # Parse and extract month from date column
+    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])  # Replace with your actual date column
+    df['month'] = df['InvoiceDate'].dt.strftime('%B')  # 'January', 'February', etc.
     st.success("✅ Excel file loaded successfully!")
 
     # Normalize column names
@@ -124,10 +127,11 @@ Just give the final answer in one sentence.
 
             chart_info = {
                 "type": chart_type,
-                "x": numeric_cols[0] if chart_type == "histogram" else object_cols[0],
+                "x": "month" if "month" in df.columns else df.columns[0],
                 "y": numeric_cols[0] if chart_type in ["bar", "line"] else None,
                 "group_by": None
             }
+
 
             fig = generate_chart(df, chart_info)
             if fig:

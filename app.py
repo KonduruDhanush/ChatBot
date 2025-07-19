@@ -105,17 +105,24 @@ Just give the final answer in one sentence.
             elif "histogram" in q or "distribution" in q:
                 return "histogram"
             else:
-                return "bar"  # fallback
+                return "bar"
 
-        if any(word in query.lower() for word in ["chart", "trend", "plot", "compare", "distribution", "graph", "pie", "bar", "line"]):
+        if any(word in query.lower() for word in ["chart", "trend", "plot", "compare", "distribution", "graph", "pie", "bar", "line", "histogram"]):
             st.markdown("### 📈 Suggested Chart")
 
             chart_type = infer_chart_type(query)
+            numeric_cols = df.select_dtypes(include='number').columns
 
             chart_info = {
                 "type": chart_type,
-                "x": df.columns[0],
-                "y": df.select_dtypes(include='number').columns[0] if chart_type != "pie" else df.select_dtypes(include='number').columns[0],
+                "x": (
+                    numeric_cols[0] if chart_type == "histogram"
+                    else df.columns[0]
+                ),
+                "y": (
+                    numeric_cols[0] if chart_type in ["bar", "line"]
+                    else None
+                ),
                 "group_by": None
             }
 

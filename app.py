@@ -65,42 +65,31 @@ Just give the final answer in one sentence.
             return "LLM failed to respond. Please try again."
 
 
-    def generate_chart(df, info):
-        try:
-            chart_type = info.get("type")
-            x = info.get("x")
-            y = info.get("y")
-            group_by = info.get("group_by")
+            def infer_chart_type(query):
+            q = query.lower()
+            if "pie" in q:
+                return "pie"
+            elif "line" in q or "trend" in q:
+                return "line"
+            elif "bar" in q or "compare" in q:
+                return "bar"
+            elif "histogram" in q or "distribution" in q:
+                return "histogram"
+            else:
+                return "bar"  # default fallback
 
-            if chart_type == "bar":
-                return px.bar(df, x=x, y=y, color=group_by)
-            elif chart_type == "line":
-                return px.line(df, x=x, y=y, color=group_by)
-            elif chart_type == "pie":
-                return px.pie(df, names=x, values=y)
-            elif chart_type == "histogram":
-                return px.histogram(df, x=x)
-        except Exception as e:
-            st.error(f"Chart error: {e}")
-        return None
-
-    query = st.text_input("Ask a question about your Excel data:")
-
-    if query:
-        with st.spinner("Thinking..."):
-            answer = ask_openrouter_llm(query, df)
-        st.subheader("💬 Response")
-        st.write(answer)
-
-        # (Optional) Visualization suggestions (advanced users can parse LLM suggestion)
-        if any(word in query.lower() for word in ["chart", "trend", "plot", "compare", "distribution", "graph"]):
+        if any(word in query.lower() for word in ["chart", "trend", "plot", "compare", "distribution", "graph", "pie", "bar", "line"]):
             st.markdown("### 📈 Suggested Chart")
+
+            chart_type = infer_chart_type(query)
+
             chart_info = {
-                "type": "bar",  # can be improved with NLP + LLM reasoning
+                "type": chart_type,
                 "x": df.columns[0],
-                "y": df.select_dtypes(include='number').columns[0],
+                "y": df.select_dtypes(include='number').columns[0] if chart_type != "pie" else df.select_dtypes(include='number').columns[0],
                 "group_by": None
             }
+
             fig = generate_chart(df, chart_info)
             if fig:
                 st.plotly_chart(fig, use_container_width=True)

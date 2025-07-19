@@ -18,6 +18,8 @@ uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
 
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
+    df.columns = df.columns.str.strip().str.lower().str.replace(" ", "") # unit price ~ unitprice
+    
     st.success("Excel file loaded successfully!")
 
     st.subheader("Data Preview")

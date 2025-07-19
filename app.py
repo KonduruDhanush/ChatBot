@@ -112,19 +112,22 @@ Just give the final answer in one sentence.
 
             chart_type = infer_chart_type(query)
             numeric_cols = df.select_dtypes(include='number').columns
+            categorical_cols = df.select_dtypes(include='object').columns
 
-            chart_info = {
-                "type": chart_type,
-                "x": (
-                    numeric_cols[0] if chart_type == "histogram"
-                    else df.columns[0]
-                ),
-                "y": (
-                    numeric_cols[0] if chart_type in ["bar", "line"]
-                    else None
-                ),
-                "group_by": None
-            }
+            if chart_type == "pie":
+                chart_info = {
+                    "type": "pie",
+                    "x": categorical_cols[0] if len(categorical_cols) > 0 else df.columns[0],
+                    "y": None,
+                    "group_by": None
+                }
+            else:
+                chart_info = {
+                    "type": chart_type,
+                    "x": numeric_cols[0] if chart_type == "histogram" else df.columns[0],
+                    "y": numeric_cols[0] if chart_type in ["bar", "line"] else None,
+                    "group_by": None
+                }
 
             fig = generate_chart(df, chart_info)
             if fig:

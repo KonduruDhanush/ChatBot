@@ -18,8 +18,6 @@ uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
 
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
-    df.columns = df.columns.str.strip().str.lower().str.replace(" ", "") # unit price ~ unitprice
-    
     st.success("Excel file loaded successfully!")
 
     st.subheader("Data Preview")
@@ -107,7 +105,7 @@ Just give the final answer in one sentence.
             elif "histogram" in q or "distribution" in q:
                 return "histogram"
             else:
-                return "bar"
+                return "bar"
 
         if any(word in query.lower() for word in ["chart", "trend", "plot", "compare", "distribution", "graph", "pie", "bar", "line", "histogram"]):
             st.markdown("### 📈 Suggested Chart")

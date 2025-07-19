@@ -110,7 +110,7 @@ Just give the final answer in one sentence.
                 return "bar"
 
         if any(word in query.lower() for word in ["chart", "trend", "plot", "compare", "distribution", "graph", "pie", "bar", "line", "histogram"]):
-            st.markdown("### 📈 Suggested Chart")
+            st.markdown("### 📈 Chart")
 
             chart_type = infer_chart_type(query)
             numeric_cols = df.select_dtypes(include='number').columns

@@ -22,8 +22,13 @@ uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
     # Parse and extract month from date column
-    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])  # Replace with your actual date column
-    df['month'] = df['InvoiceDate'].dt.strftime('%B')  # 'January', 'February', etc.
+    # Debug: show columns
+    st.write("📌 Column names:", df.columns.tolist())
+
+    # Replace 'Date' with the correct column name shown in the list above
+    df['Date'] = pd.to_datetime(df['Date'])  # <-- change this if your column is named differently
+    df['month'] = df['Date'].dt.strftime('%B')  # Extracts 'January', 'February', etc.
+
     st.success("✅ Excel file loaded successfully!")
 
     # Normalize column names
@@ -131,7 +136,6 @@ Just give the final answer in one sentence.
                 "y": numeric_cols[0] if chart_type in ["bar", "line"] else None,
                 "group_by": None
             }
-
 
             fig = generate_chart(df, chart_info)
             if fig:
